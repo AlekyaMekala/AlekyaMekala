@@ -1,0 +1,260 @@
+Q1. Commission percentage
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to replace the commission_pct with 0 if the commission_pct value is null, else return the value.
+
+Round the commission_pct up to two decimal places.
+Return the result ordered by employee_id in ascending order.
+========================================================
+select employee_id,
+round(ifnull(commission_pct,'0'),2) as commission_pct
+from employees
+order by employee_id
+==========================================================
+Q2. Department name
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Find the details of the employees who are working in the departments 'Administration', 'Marketing', and 'Human Resources'.
+
+Return the columns 'employee_id', 'full_name'(first and last name separated by space), and 'salary'.
+Return the result ordered by employee_id in ascending order.
+==================================================================
+select employee_id,
+concat(first_name,' ',last_name) as full_name,salary
+from employees where department_id in(select department_id from departments 
+                                      where department_name in 
+                                      ('Administration','Marketing','Human Resources'))
+                                       order by employee_id
+===================================================================================
+Q4. Employee 107
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find the details of the other employees who work in the same job as the employee with employee_id as 107.
+
+Note:
+
+Create a new column "full_name" by concatenating the first_name and last_name columns, separated by space.
+Return the columns 'full_name', 'salary', 'department_id', and 'job_id'.
+Return the output ordered by full_name in ascending order.
+=========================================================================
+select concat(first_name,' ',last_name) as full_name,salary
+       department_id,job_id
+       from employees
+       where job_id in (select job_id from employees where employee_id=107)
+       order by full_name
+============================================
+Q6. Accountant
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Using the employees table, create a new column as 'Accountant'.
+
+If the employees are working at the 'FI_ACCOUNT' or 'AC_ACCOUNT' designation then label it as 1, else label all other designations as 0.
+
+Return the columns 'employee_id', 'first_name', 'last_name', 'salary', 'Accountant'.
+Return the output ordered by employee_id in ascending order.
+============================================
+select employee_id,first_name,last_name,salary,
+case
+when job_id like 'FI_ACCOUNT'
+then 1
+when job_id like 'AC_ACCOUNT'
+then 1
+else 0
+end as Accountant
+from employees
+order by employee_id
+==================================================
+Q5. Salary Bins
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Based on the employee's salary, divide the employees into three different classes.
+
+Salary greater than 20,000 (i.e, excluding 20,000) as 'Class A'
+Salary between 10,000 to 20,000 (i.e, including both 10,000 and 20,000) as 'Class B'
+Salary less than 10,000 (i.e, excluding 10,000) as 'Class C'. Return the new column as 'Salary_bin'.
+Return the columns 'employee_id', 'salary', and 'Salary_bin'.
+Return the result ordered by employee_id in ascending order.
+=========================================================================
+
+select employee_id,salary,
+case
+when salary > 20000
+then 'Class A'
+when salary BETWEEN 10000 AND 20000
+then 'Class B'
+when salary < 10000
+then 'Class C'
+end as Salary_bin
+from employees
+order by employee_id
+=======================================================================
+select * from employees
+where employee_id not in(select employee_id from job_history)
+order by employee_id
+===============================================================
+Q7. Judgement of Triangle
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a SQL query to report whether each triad of the three line segments in the given data can form a triangle or not.
+
+Note: Return the result table ordered by x, y and z in ascending order.
+
+Sample Input:
+
+Table: triangle
+
+
+
+Sample output:
+
+
+
+Explanation:
+
+Three line segments can form a triangle only if the sum of any of the two segments is larger than the third one.
+
+x = 13, y = 15, z = 30
+13 + 15 (28) > 30 (No)
+15 + 30 (45) > 13 (Yes)
+13 + 30 (43) > 15 (Yes)
+Since all three conditions are not satisfied these three segments can't form a triangle.
+x = 10, y = 20, z = 15
+10 + 20 (30) > 15 (Yes)
+20 + 15 (35) > 10 (Yes)
+10 + 15 (25) > 20 (Yes)
+Since all three conditions are satisfied these three segments can form a triangle.
+===========================================================================================
+
+select x,y,z,
+case
+when x+y>z and y+z>x and x+z>y
+then 'Yes'
+else 'No'
+end as triangle
+from triangle
+order by x,y,z
+====================================================================
+Q8. Western Longitudes
+SQL
+Attempted
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to get the sum of Western Longitudes (long_w) from station table having values greater than 38.7880 and less than 137.2345.
+
+Round off your answer to 4 decimal places.
+==================================================
+select round(sum(long_w),4) as sum
+from station
+where long_w>38.7880 and long_w<137.2345
+==============================================
+
+
+2. Seattle
+SQL
+Solved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Display the details of all the employees whose department location is in Seattle.
+
+Return the columns 'employee_id', 'first_name', 'last_name', and job_id'.
+Return the table ordered by employee_id in ascending order.
+===============================================================
+select employee_id,first_name,last_name,job_id
+from employees
+where department_id in(select department_id 
+                       from departments
+                        where location_id in(
+                         select location_id 
+                         from locations 
+                         where city = 'Seattle' )
+                        )
+===============================================================
+Q1. Missing Data
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to retrieve each employee's employee number, name, phone, and email in the employee's table, but if an employee does not have an email or phone, we want to display the text "N/A" instead.
+
+Return the result ordered by employeeNumber in ascending order.
+=============================================================
+select employeeNumber,firstName,lastName,
+ifnull(email,"N/A") as email,
+ifnull(phone,"N/A") as phone
+from employees
+order by employeeNumber
+=========================================
+Q3. Not working employee
+SQL
+Solved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Find the details of employees who are not working in any department.
+
+Return the columns 'employee_id', 'first_name', 'last_name', 'job_id', and 'manager_id'.
+Return the result ordered by employee_id in ascending order.
+=======================================================================
+select employee_id,first_name,last_name,job_id,manager_id
+from employees
+where department_id is NULL 
+order by employee_id
+================================================
+Q9. Salary(5000-10000)
+SQL
+Solved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Display the details of the employees who work in departments 50,10, or 80 and whose salary is between 5000 to 10000 and also where employees have no commission_pct(commission percentage).
+
+Return the result ordered by employee_id in ascending order.
+==============================================================
+select employee_id,first_name,last_name,salary
+from employees
+where commission_pct is null and salary between 5000 and 10000 and department_id in(50,10,80) 
+order by employee_id
+==========================================================================

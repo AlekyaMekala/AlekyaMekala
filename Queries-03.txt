@@ -1,0 +1,177 @@
+
+================================
+Q1. Movies released after 2014
+================================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to display the titles of the movies that are released (i.e., release_year) after 2014 and have an average vote rating (i.e.,vote_average) greater than 7.
+
+Return the column 'original_title'.
+Return the result ordered by original_title in ascending order.
+Dataset description for movies table:
+ 
+select original_title from movies
+where release_year > '2014-%%-%%' and vote_average > 7
+order by original_title asc
+
+======================
+Q5. Keywords
+================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to list down all the movies along with their details that have keywords like 'sport' or 'sequel' or 'suspense'.
+
+Note:
+
+Return the columns 'original_title', 'director', 'genres', 'cast', 'budget', 'revenue', 'runtime', and 'vote_average'.
+Return the columns ordered by original_title in ascending order.
+
+select original_title,director,genres,cast,budget,revenue,runtime,vote_average
+from movies 
+where keywords like '%sport%' or keywords like '%sequel%' or keywords like '%suspense%'
+order by original_title asc
+
+===============
+Article Views
+=======================I
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find all the authors that viewed at least one of their own articles.
+
+Return the result table sorted by id in ascending order.
+Note: There is no primary key for this table, it may have duplicate rows. Also, note that equal author_id and viewer_id indicate the same person.
+
+select distinct author_id as id from views where author_id = viewer_id
+order by id asc
+=============
+Country is big
+===============
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+A country is big if:
+
+it has an area of at least three million (i.e., 3000000 km2), or
+it has a population of at least twenty-five million (i.e., 25000000).
+Write a query to report the name, population, and area of the big countries.
+
+Note: Return the result table ordered by name column in ascending order.
+
+
+select name,population,area from world
+where area >= 3000000 or population >=25000000
+order by name asc
+
+========================
+Employee 101
+======================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to get all the details of all the employees from job_history except for the employee with id 101
+
+Return all the fields.
+Return the result ordered by employee_id and job_id in ascending order.
+
+SELECT * FROM job_history
+where employee_id != 101
+order by employee_id,job_id
+=======================
+December 2003
+===========================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find the orderNumber and requiredDate of the orders which are ordered in 2003 December and the status is "Shipped".
+
+Note:
+
+Use the orderDate column to check for the orders that are ordered in 2003 December.
+Return the result ordered by orderNumber in ascending order.
+
+select orderNumber,requiredDate from orders
+where orderDate like '2003-12-%' and status = 'Shipped'
+order by orderNumber
+=========================
+ Employees Last Names
+ =============================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to return a list of all employees with selected last names: King, Taylor, and Grant from the employee's table.
+
+Return all the fields.
+Return the result ordered by employee_id in ascending order.
+
+select * from employees
+where last_name in ('King','Taylor','Grant')
+order by employee_id
+====================
+Letter 'n'
+======================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to find all the employees whose first_name ends with the letter 'n'.
+
+Return the columns 'employee_id', 'full_name' (first name and last name separated by space), and 'phone_number'.
+Return the output ordered by employee_id in ascending order.
+
+select employee_id, concat(first_name,' ',last_name) as full_name,phone_number from employees
+where first_name like '%n'
+order by employee_id
+==========================
+ Eligible for Discount
+ ==========================
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+A user is eligible for a discount if they had a purchase in the inclusive interval of time [2022-03-08, 2022-03-20] with at least minAmount = 1000.
+
+Write a query to report the unique user IDs of the users that are eligible for a discount.
+
+Return the result table ordered by user_id in ascending manner.
+
+select distinct user_id from purchases
+where time_stamp between '2022-03-08' and '2022-03-20' and  amount >= 1000
+order by user_id
+

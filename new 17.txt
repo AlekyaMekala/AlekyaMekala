@@ -1,0 +1,302 @@
+Q1. Europe
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to display the details of the employees who belong to the 'Europe' region.
+
+Note:
+
+Return the columns 'employee_id', 'full_name' (first_name and last_name separated by space), 'salary', 'phone_number', 'department_id', 'department_name', 'street_address', 'city', 'country_name', 'region_id', 'region_name'.
+Return the result ordered by salary in descending order and by employee_id in ascending order.
+===============================================================================================================
+(wrong)
+select e.employee_id, 
+       e.concat(first_name,' ',last_name) as full_name,
+       e.salary,
+       e.phone_number,
+       d.department_id,
+       d.department_name,
+       l.street_address,
+       l.city,
+       c.country_name,
+       r.region_id,
+       r.region_name
+from employees e
+inner join departments d
+on e.department_id=d.department_id
+
+from departments d
+inner join locations l
+on d.location_id=l.location_id
+
+from countries c
+inner join locations l
+on c.country_id=l.country_id
+
+from regions r
+inner join countries c
+on r.region_id=c.region_id
+where region_name='Europe'
+order by e.salary desc,e.employee_id
+================================================================================================================
+CORRECT ANS
+=================================================================================================================
+SELECT emp.employee_id, CONCAT(emp.first_name,' ',emp.last_name) AS full_name, emp.salary, emp.phone_number, emp.department_id, 
+dep.department_name, loc.street_address, loc.city, con.country_name, reg.region_id, reg.region_name
+
+FROM employees emp
+
+JOIN departments dep ON emp.department_id=dep.department_id
+
+JOIN locations loc ON dep.location_id=loc.location_id
+JOIN countries con ON loc.country_id=con.country_id
+JOIN regions reg ON con.region_id=reg.region_id
+WHERE region_name='Europe'
+ORDER BY salary desc, emp.employee_id
+====================================================================================================================
+=========================================================================================================================
+
+Q2. Job like sales
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Display the details of the employees who had job titles like 'sales' in the past and the min_salary is greater than or equal to 6000.
+
+Return the columns 'employee_id', 'department_name', 'job_id', 'job_title', and 'min_salary'.
+Return the employee's current information for the columns 'employee_id', and 'department_name'.
+Return the employee's past information for the columns 'job_id', 'job_title', and 'min_salary'.
+Return the output ordered by employee_id and min_salary in ascending order.
+========================================================================================================================
+SELECT emp.employee_id, dept.department_name, j.job_id, j.job_title, j.min_salary
+FROM employees as emp
+INNER JOIN departments as dept ON emp.department_id = dept.department_id
+INNER JOIN job_history as jh ON emp.employee_id = jh.employee_id
+INNER JOIN jobs as j ON jh.job_id = j.job_id
+WHERE j.min_salary >= 6000 AND j.job_title LIKE '%sales%'
+ORDER BY emp.employee_id, j.min_salary ASC
+===============================================================================================================
+Q3. No. of employees
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to display the count of employees as 'No_of_Employees' and, the total salary paid to employees as 'Total_Salary' for each department.
+
+Return the columns 'department_name', 'No_of_Employees', and 'Total_Salary'.
+Return the output ordered by department_name in ascending order.
+Note:
+
+If there are no employees in the department return the No_of_Employees as 0 and Total_Salary as NULL.
+=================================================================================================================
+SELECT d.department_name,
+COUNT(e.employee_id) AS No_of_Employees,
+SUM(e.salary) AS Total_Salary
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+GROUP BY d.department_name
+ORDER BY d.department_name ASC
+
+=====================================================================================================================
+Q4. Salary > 40%
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to display the employee's full name (first name and last name separated by space) as 'full_name' of all those employees whose salary is greater than 40% of their department’s total salary or employees who don't belong to any department.
+
+Return the column 'full_name'.
+Return the output ordered by full_name in ascending order.
+===============================================================================================================================
+SELECT CONCAT(e.first_name, ' ', e.last_name) AS full_name
+FROM employees e
+LEFT JOIN (SELECT department_id, 
+          SUM(salary) AS department_salary 
+          FROM employees 
+          GROUP BY department_id) d ON e.department_id = d.department_id
+WHERE e.salary > 0.4 * d.department_salary OR d.department_salary IS NULL
+ORDER BY full_name ASC
+
+======================================================================================================================================================
+Q1. Sales Person
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to report the names of all the salespersons who did not have any orders related to the company named "RED".
+
+Note: Return the result table ordered by name in ascending order.
+=============================================================================================================================================
+SELECT s.name
+FROM salesperson s
+WHERE s.sales_id NOT IN (SELECT s.sales_id 
+                                FROM salesperson 
+								JOIN orders o ON s.sales_id = o.sales_id 
+								JOIN company c ON o.com_id = c.com_id 
+								WHERE c.name = 'RED')
+order by s.name
+
+
+===================================================================================================================================================
+
+Q2. Joined first
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Display the details of the employees who joined the company before their managers joined the company.
+
+Return the columns 'employee_id', 'first_name', and 'last_name'.
+Return the result ordered by employee_id in ascending order.
+===========================================================================================================================================
+select e1.employee_id, e1.first_name, e1.last_name from employees e1
+join employees e2 on e1.manager_id=e2.employee_id
+where e1.hire_date<e2.hire_date
+order by e1.employee_id
+=========================================================================================================================================
+Q3. Products Recommendation
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to find the customer_id and customer_name of customers who bought products "Bread" and "Milk" but did not buy the product "Eggs".
+
+Return the output ordered by customer_name in ascending order
+=====================================================================================================================================================
+SELECT c.customer_id, c.customer_name
+FROM orders o
+JOIN customers c ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.customer_name
+HAVING sum(o.product_name="Bread") > 0 AND sum(o.product_name="Milk") > 0 AND sum(o.product_name="Eggs") = 0
+ORDER BY customer_name
+
+======================================================================================================================================================
+Q4. Manager left
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to find the employee_id of the employees whose salary is strictly less than $15000 and whose manager left the company.
+
+When a manager leaves the company, their information is deleted from the employees table, but the reportees still have their manager_id set to the manager that left.
+
+Note: Return the result ordered by employee_id in ascending order.
+=======================================================================================================================================================
+SELECT a.employee_id 
+ FROM employees AS a 
+ LEFT JOIN employees AS b ON a.manager_id = b.employee_id 
+WHERE a.salary < 15000 AND a.manager_id IS NOT NULL AND b.employee_id IS NULL 
+ ORDER BY 1 
+
+==============================================================================================================================================================================
+
+Q1. Shortest distance
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to find the shortest distance between any two points from the points table. Round the distance to two decimal points
+
+Note:
+
+The distance between two points p1(x1, y1) and p2(x2, y2) is calculated using euclidean distance formula √((x2 - x1)2 + (y2 - y1)2).
+Save the new column as 'shortest'.
+
+
+
+=====================================================================================================================================
+select round(sqrt(pow((p1.x - p2.x),2) + pow((p1.y - p2.y),2)),2) as shortest 
+ from points p1, points p2 
+ where not (p1.x = p2.x and p1.y = p2.y) 
+ order by shortest 
+ limit 1; 
+ =======================================================================================================================================================
+ Q2. Banned Accounts
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find the account_id of the accounts that should be banned from Leetflex.
+
+An account should be banned if it was logged in at some moment from two different IP addresses.
+
+Return the output ordered by account_id in ascending order.
+=====================================================================================================================================================================================
+
+select distinct(l1.account_id)
+from loginfo l1
+inner join loginfo l2
+on l1.account_id=l2.account_id and
+l1.ip_address!=l2.ip_address
+where l1.login between l2.login and l2.logout
+order by l1.account_id
+=======================================================================================================================================================
+
+Q3. Chemical Bond
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Two elements can form a bond if one of them is Metal and the other is Nonmetal.
+
+Write a SQL query to find all the pairs of elements that can form a bond.
+
+Return the result table ordered by columns metal and nonmetal in ascending order.
+=========================================================================================================================================================
+Q3. Chemical Bond
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Two elements can form a bond if one of them is Metal and the other is Nonmetal.
+
+Write a SQL query to find all the pairs of elements that can form a bond.
+
+Return the result table ordered by columns metal and nonmetal in ascending order.
+==========================================================================================================================================================
+select m.symbol as metal,
+       n.symbol as nonmetal
+from elements m
+cross join elements n 
+where m.type='Metal' and
+      n.type='Nonmetal'
+order by 1,2
+=================================================================================================================================================
+

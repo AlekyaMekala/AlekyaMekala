@@ -1,0 +1,18 @@
+29/03/2024
+===============================
+
+select * from `farmers_market.product` where product_size is null
+select * from `farmers_market.product` where product_size is not null
+select * from `farmers_market.product` where product_size is null or trim(product_size)=""
+select * from `farmers_market.product` where trim(product_size)=""
+select * from `farmers_market.product` where trim(product_size)!=""
+select *, ifnull(product_size,"no value") as cleaned_size from `farmers_market.product`
+select * from `farmers_market.market_date_info`
+select market_date,quantity*cost_to_customer_per_qty as sales from `farmers_market.customer_purchases` where market_date in(select market_date from `farmers_market.market_date_info` where market_rain_flag=1) or market_date in (select market_date from `farmers_market.market_date_info` where market_snow_flag=1)
+select * from `farmers_market.product`
+where product_category_id in (select product_category_id from `farmers_market.product_category`
+where lower(product_category_name) like '%fresh%')
+
+select * from `farmers_market.customer` where customer_id in (select distinct customer_id from `farmers_market.customer_purchases`)
+
+select * from `farmers_market.customer` where customer_id not in (select distinct customer_id from `farmers_market.customer_purchases`)

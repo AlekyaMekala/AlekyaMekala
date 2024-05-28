@@ -1,0 +1,212 @@
+select * from `farmers_market.product`
+
+select product_id,product_name,product_size from `farmers_market.product`
+
+select product_id,product_name,product_size 
+from `farmers_market.product`
+order by product_id desc
+
+select * from `farmers_market.customer_purchases`
+
+select * from `farmers_market.customer_purchases`
+order by market_date desc, transaction_time asc
+
+select market_date,transaction_time,quantity,cost_to_customer_per_qty
+from `farmers_market.customer_purchases`
+order by market_date desc, transaction_time
+
+select market_date,transaction_time,quantity,cost_to_customer_per_qty
+from `farmers_market.customer_purchases`
+order by market_date desc, transaction_time
+
+select market_date,transaction_time,quantity,cost_to_customer_per_qty
+from `farmers_market.customer_purchases`
+order by market_date desc
+limit 2 offset 1
+
+select market_date,customer_id,vendor_id,quantity, cost_to_customer_per_qty,
+round(quantity*cost_to_customer_per_qty, 2) as total_amount
+from `farmers_market.customer_purchases`
+order by total_amount desc
+limit 5
+
+select market_date,customer_id,vendor_id,quantity, cost_to_customer_per_qty,
+floor(quantity*cost_to_customer_per_qty) as total_amount
+from `farmers_market.customer_purchases`
+order by total_amount desc
+limit 5
+
+select * from `farmers_market.customer`
+select *, concat(customer_first_name,' ',customer_last_name) as full_name
+from `farmers_market.customer`
+
+select *,
+concat(upper(customer_first_name),' ',customer_last_name) as Full_Name
+from `farmers_market.customer`
+
+select *, 
+concat(upper(customer_first_name),' ',upper(substr(customer_last_name,1,1))) as Full_Name
+from `farmers_market.customer`
+
+select *,
+concat(upper(substr(customer_first_name,1,1)),
+lower(substr(customer_first_name,2)),
+' ',upper(substr(customer_last_name,1,1)),
+lower(substr(customer_last_name,2))) as full_name
+from `farmers_market.customer`
+
+select *, 
+concat(initcap(customer_first_name),' ',initcap(customer_last_name)) as Full_Name
+from `farmers_market.customer`
+
+select * from `farmers_market.product_category`
+where product_category_id = 1
+
+select * from `farmers_market.product_category`
+where product_category_id != 1
+
+select *,
+round(quantity*cost_to_customer_per_qty,2) as total_amt
+from `farmers_market.customer_purchases`
+where customer_id = 4
+order by market_date desc
+
+select * from `farmers_market.product`
+where (product_id>3 and product_id<8) or product_id=10
+
+select * from `farmers_market.vendor_booth_assignments`
+where vendor_id = 4 and (market_date>='2019-04-03' and market_date<='2019-05-16')
+
+select * from `farmers_market.vendor_booth_assignments`
+where vendor_id = 4 and (market_date between'2019-04-03' and '2019-05-16')
+
+select * from `farmers_market.customer`
+where customer_last_name in ('diaz','edward','wilson')
+
+select * from `farmers_market.customer`
+where customer_last_name not in ('diaz','edward','wilson')
+
+select distinct customer_id
+from `farmers_market.customer_purchases`
+
+select * from `farmers_market.product`
+where product_size is null
+
+select * from `farmers_market.product`
+where product_size is null
+or trim(product_size)=''
+
+select * from `farmers_market.product`
+where product_size is not null
+
+select product_id,
+ifnull(product_size, 'medium')
+from `farmers_market.product`
+
+select market_date,market_rain_flag from `farmers_market.market_date_info`
+where market_rain_flag=1
+
+select * from `farmers_market.customer_purchases`
+where market_date in (select market_date from `farmers_market.market_date_info`
+where market_rain_flag=1)
+
+select * from `farmers_market.product_category`
+
+select * from `farmers_market.product`
+where product_category_id in (select product_category_id from `farmers_market.product_category`
+where lower(product_category_name) like '%fresh%')
+
+select * from `farmers_market.product`
+where product_category_id not in (select product_category_id from `farmers_market.product_category`
+where lower(product_category_name) like '%fresh%')
+
+select 
+vendor_id,
+vendor_name,
+vendor_type,
+case
+when lower(vendor_type) like '%fresh%'
+then 'fresh produce'
+else 'other'
+end as category
+from `farmers_market.vendor`
+
+select *,
+if(lower(vendor_type) like '%fresh%','fresh','not fresh')
+as type
+from `farmers_market.vendor`
+
+select 
+vendor_id,
+vendor_name,
+vendor_type,
+case
+when lower(vendor_type) like '%fresh%' then 1
+else 0
+end as category
+from `farmers_market.vendor`
+
+select
+vendor_id,
+vendor_name,
+vendor_type,
+if(lower(vendor_type) like '%fresh%',1,0) as type
+from `farmers_market.vendor`
+
+select
+market_date,
+customer_id,
+quantity,
+cost_to_customer_per_qty,
+case
+when quantity*cost_to_customer_per_qty < 5
+then 'under $5'
+when quantity*cost_to_customer_per_qty between 5 and 9.99
+then '$5.00-$9.99'
+when quantity*cost_to_customer_per_qty between 10 and 19.99
+then '$10.00-$19.99'
+else '$20.00 and over'
+end as price_bin
+from `farmers_market.customer_purchases`
+
+
+select orderNumber, requiredDate
+from orders
+where orderDate
+between '2003-12-01' and '2003-12-31'
+and status = 'Shipped'
+order by orderNumber
+
+select * from `farmers_market.customer_purchases`
+where customer_id = 4
+order by market_date desc
+
+select * from `farmers_market.product`
+where product_id between 3 and 8 or product_id = 10
+
+select * from `farmers_market.customer`
+where customer_last_name in ('Diaz','Edwards','Wilson')
+
+select * from `farmers_market.customer_purchases`
+where quantity>4 and quantity<8
+
+
+select * from `farmers_market.vendor_booth_assignments`
+where vendor_id = 7 and (market_date>='2019-04-03' and market_date<='2019-05-16')
+
+select * from `farmers_market.vendor_booth_assignments`
+where vendor_id = 4 and (market_date between'2019-04-03' and '2019-05-16')
+
+
+select * from `farmers_market.product_category`
+where product_category_name  like '%Fresh%'
+
+select * from `farmers_market.customer`
+where customer_first_name like '%Jan%'
+
+
+select distinct product_id, customer_id
+from `farmers_market.customer_purchases`
+
+29-03-2024
+

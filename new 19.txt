@@ -1,0 +1,37 @@
+select *
+from `hr.employees`
+select avg(salary)
+from `hr.employees`
+
+
+select *, round(avg(salary) over(), 2) as avg
+from `hr.employees`
+
+select *, min(hire_date) over() as first_hire_date
+from `hr.employees`
+
+
+select department_id, avg(salary) as avg_salary
+from `hr.employees`
+
+select *
+from
+(select salary, avg(salary) over(partition by department_id) as avg_by_dep
+from `hr.employees`)
+where salary>avg_by_dep
+order by department_id desc
+
+select * from
+(select *,
+       dense_rank() over(order by salary desc) as rnk
+       from `hr.employees`) a
+       where rnk=5
+
+
+#Fetch the details of employees with the 3rd highest salaries from each department.#
+
+select * from
+(select *,
+        dense_rank() over(partition by department_id order by salary desc) as rnk
+        from `hr.employees`)a
+        where rnk =3

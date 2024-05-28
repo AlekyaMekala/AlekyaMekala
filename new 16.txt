@@ -1,0 +1,226 @@
+select c.customer_id,c.customer_first_name
+from `farmers_market.customer` c
+left join `farmers_market.customer_purchases` cp
+on c.customer_id=cp.customer_id
+where cp.customer_id is null
+/*Get a list of customers' zip codes for customers who made a purchase on 2019-04-06*/
+
+select distinct c.customer_zip
+from `farmers_market.customer` c
+inner join `farmers_market.customer_purchases` cp
+on c.customer_id=cp.customer_id
+where cp.market_date='2019-04-06'\=======
+==========================================================
+
+Q1. Product Sales I
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write an SQL query that reports the product_name, year, and price for each sale_id in the sales table, for which the corresponding product_id is NOT NULL.
+
+Return the result table ordered by year and product_name in ascending order.
+===================================================================================
+SELECT p.product_name,s.year,s.price
+FROM sales s
+left join product p
+on s.product_id=p.product_id
+where s.product_id is not null
+order by s.year,p.product_name
+====================================================================================================
+Q2. Last Month's Friendly Movies
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a SQL query to report the unique titles of the kid-friendly movies streamed in June 2020.
+
+Use the given Content and TVProgram tables.
+Return the result table ordered by title in ascending order.
+=============================================================================================================
+SELECT distinct c.title
+FROM Content c
+left join TVProgram t
+on c.content_id=t.content_id
+where c.Kids_content = 'Y' and c.content_type = 'Movies' and t.program_date like '2020-06-%%'
+order by c.title
+==================================================================================================================
+ African Cities
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Given the city and country tables, query the names of all cities where the continent is 'Africa'.
+
+Return the result table ordered by the city name in ascending order.
+===============================================================================================================
+SELECT c.name
+from city c
+left join country co
+on c.countrycode=co.code
+where co.continent='Africa'
+order by c.name
+========================================================================================================
+Q4. Department (No emp)
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to display the details of all those departments that don't have any working employees.
+
+Return the columns 'department_id', and 'department_name'.
+Return the results ordered by 'department_id' in ascending order.
+============================================================================================================
+select d.department_id,d.department_name
+from departments d
+left join employees e
+on d.department_id=e.department_id
+where e.department_id is null
+order by d.department_id
+============================================================================================================
+Q5. Bonus less than 1000
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to report the name and bonus amount of each employee who gets a bonus of less than 1000.
+
+Return the bonus as 'NULL' if there's an employee who doesn’t get a bonus.
+Return the output ordered by the bonus in ascending order.
+=====================================================================================================================
+SELECT e.name,b.bonus
+from employee e
+left join bonus b
+on e.empId=b.empId
+where b.bonus<1000 or b.bonus is null
+order by b.bonus
+==============================================================================================================
+Q6. Handles No Customers
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a SQL query to find the employee details who handles no customers.
+
+Note:
+
+Use the given customers table.
+Return the output ordered by employeeNumber in ascending order.
+The salesRepEmployeeNumber column to the employeeNumber who made sales to the customers.
+===================================================================================================================
+select e.employeeNumber,e.firstName,e.lastName
+from employees e
+left join customers c
+on e.employeeNumber=c.salesRepEmployeeNumber
+where c.salesRepEmployeeNumber is null
+==================================================================================================================
+Q8. Analysis of Sales
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query that reports the buyers who have bought the product S8 but not an iPhone.
+
+Note:
+
+Return the result table ordered by buyer_id in ascending order.
+S8 and iPhone are products present in the Product table.
+Filters the results based on the product_name (i.e., S8, iPhone) as product_id might differ in the test cases.
+======================================================================================================================
+select distinct s.buyer_id
+from Sales s
+inner join Product P
+on s.Product_id=p.Product_id
+where p.Product_name='S8' and buyer_id NOT IN (SELECT distinct s.buyer_id 
+                                             FROM Sales s 
+                                             inner join Product p
+                                             on s.Product_id=p.Product_id
+                                             WHERE p.product_name = 'iPhone')
+order by s.buyer_id
+=============================================================================================================================
+Q7. Departments & Employees
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find all departments and respective employee's details, including those departments even if there are no employees assigned to them.
+
+Return the department_name, and department_id along with the employee_id, first_name, and last_name of the employees belonging to that department.
+Return the output ordered by employee_id, department_id, and first_name in ascending order.
+=========================================================================================================================================
+SELECT e.employee_id,
+       e.first_name,
+       e.last_name,
+       d.department_id,
+       d.department_name
+from departments d
+left join employees e
+on d.department_id=e.department_id
+order by e.employee_id,d.department_id,e.first_name
+===================================================================================================================================
+Q1. Product Description
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to get all the productName and productCode along with its productLine text description.
+
+Return the output ordered by productCode in ascending order.
+============================================================================================================================================================
+SELECT p.productCode,
+       p.productName,
+       pl.textDescription
+from products p
+inner join productlines pl
+on p.productLine=pl.productLine
+order by p.productCode
+===================================================================================================================================================
+Q2. Ad-Free Sessions
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to report all the sessions that did not get shown any ads.
+
+Return the resultant table ordered by session_id in ascending order.
+
+=========================================================================================================================================
+select p.session_id
+from Playback p
+left join Ads a
+on p.customer_id=a.customer_id AND a.timestamp BETWEEN p.start_time AND p.end_time 
+where a.customer_id is null 
+order by p.session_id
+============================================================================================================================================
+
+

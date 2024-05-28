@@ -1,0 +1,278 @@
+Q1. Account Balance
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to report the balance of each user after each transaction. You may assume that the balance of each account before any transaction is 0 and that the balance will never be below 0 at any moment.
+
+Return the result table in ascending order by account_id, then by day in case of a tie.
+
+Sample Input:
+
+Table: transactions
+
+
+
+Sample output:
+
+=========================================================
+SELECT account_id,day,
+       sum(case when type = 'Deposit' 
+           then amount
+           else -amount
+           end)
+       over(partition by account_id order by day) as balance
+       from transactions
+       order by account_id,day
+
+=======================================================
+Q7. Most Recent
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a Query to find the first day of the most recent job of every employee and return it as the 'recent_job'.
+
+Return the columns 'first_name', and 'recent_job'.
+Note:
+
+Refer to the job_history table to get the job details of the employees.
+Return the output ordered by first_name in ascending order.
+========================================================
+select distinct e.first_name,
+       first_value(jh.start_date) over (partition by e.employee_id order by jh.start_date desc 
+       range between unbounded preceding and unbounded following) as 'recent_job'
+       from job_history jh
+       inner join employees e
+       on e.employee_id=jh.employee_id
+       order by first_name
+
+
+=============================================================
+Q2. Game Play Analysis III
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to report for each player and date, how many games played so far by the player.
+
+That is the total number of games played by the player until that date.
+
+Return the result table ordered by player_id and games_played_so_far in ascending order.
+==================================================================
+select player_id,event_date,games_played_so_far
+from (select *,
+             sum(games_played) over(partition by player_id order by event_date) as games_played_so_far
+             from activity) a
+order by player_id, games_played_so_far
+==================================================================
+Q5. Orders With Maximum Quantity Above Average
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+You are running an e-commerce site that is looking for imbalanced orders.
+
+An imbalanced order is one whose maximum quantity is strictly greater than the average quantity of every order (including itself).
+
+The average quantity of an order is calculated as (total quantity of all products in the order) / (number of different products in the order).
+
+The maximum quantity of an order is the highest quantity of any single product in the order.
+
+Write a query to find order_id of all imbalanced orders.
+
+Return the result table ordered by order_id in ascending order.
+===================================================================
+select order_id
+      from (select order_id,
+            max(avg(quantity)) over() as max_avg_qty,
+            max(quantity) as max_qty
+            from ordersdetails
+            group by 1) a
+    where max_qty > max_avg_qty
+    order by order_id
+
+======================================================
+Q3. Difference of salary
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+For each employee display the salary and salary difference from the next higher salary in increasing order.
+
+Return the columns employee_id, salary, next_higher_salary and salary_difference.
+Return the output ordered by salary and salary_difference in ascending order.
+===============================================================================
+select employee_id,salary,
+       lead(salary,1) over(order by salary) as next_higher_salary,
+       lead(salary,1) over(order by salary)-salary as salary_difference
+       from employees
+       order by salary, salary_difference
+
+====================================================================================
+Q6. Sales Quartile
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to get the total amount for each customer who made payments along with their sales quartile based on the amount in descending order.
+
+Quartile refers to any of the 4 equal bins into which a data set can be divided, based on the values of a particular variable.
+Here, based on the total_amount we need to divide data into 4 equal bins. Where the 1st bin consists of the highest total_amount and the 4th bin consists of the lowest total_amount.
+Order the output by total_amount in descending order and by sales_quartile in ascending order.
+===========================================================================================================================================================
+select c.customerName,
+       sum(p.amount) as total_amount,
+       ntile(4) over(order by sum(p.amount) desc) as sales_quartile
+from payments p
+join customers c
+on c.customerNumber=p.customerNumber
+group by c.customerName
+order by total_amount desc, sales_quartile asc
+
+===================================================================================================
+Q4. Expensive products
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to retrieve the productLine, productName, and MSRP (i.e., Manufacturer's Suggested Retail Price) for all products, along with the third most expensive product and the fifth most expensive product within each product line, based on their MSRP.
+
+Order the output by productLine in ascending order and by MSRP in descending order.
+============================================================================================================
+SELECT productLine, productName, MSRP,
+NTH_VALUE(productName, 3) OVER (PARTITION BY productLine ORDER BY MSRP DESC) AS thirdMostExpensive_Product,
+NTH_VALUE(productName, 5) OVER (PARTITION BY productLine ORDER BY MSRP DESC) AS fifthMostExpensive_Product
+from products
+ORDER BY productLine, MSRP DESC
+=============================================================================================================
+Q2. First job salary
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find the starting maximum salary of the first job that every employee held and return it as 'first_job_sal'.
+
+Return the columns 'first_name', 'last_name', 'first_job_sal'.
+Return the result sorted by first_name in ascending order.
+Note:
+
+Refer to the job_history table to get the job details of the employees.
+Refer to the employees table for first_name and last_name.
+Refer to the jobs table for the maximum salary.
+=======================================================================================================================
+select distinct(e.first_name),
+       e.last_name,
+       first_value(j.max_salary) OVER (PARTITION BY jh.employee_id ORDER BY jh.start_date) AS 'first_job_sal'
+       from job_history jh
+       join jobs j on jh.job_id= j.job_id
+       join employees e on jh.employee_id=e.employee_id
+       order by e.first_name
+
+=============================================================================================================================
+Q1. Human traffic
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Each row in the table contains the visit_date and visit_id to the mall with the number of people during the visit. No two rows will have the same visit_date
+
+Write a query to display the records when three or more rows with consecutive IDs have number of people is greater than or equal to 100 for each of them.
+
+Return the id, visit_date, and people.
+Return the result ordered by visit_date in ascending order.
+====================================================================================================================================
+SELECT id, visit_date, people
+FROM (SELECT id, visit_date, people,
+ lead(people) over (order by id asc) as next1, 
+ lead(people,2) over (order by id asc) as next2, 
+ lag(people) over (order by id asc) as prev1, 
+ lag(people,2) over (order by id asc) as prev2 from mall) mall_ppl
+
+WHERE (people >= 100 and next1 >= 100 and next2 >= 100) or 
+(people >= 100 and prev1 >= 100 and prev2 >= 100) or 
+(people >= 100 and prev1 >= 100 and next1 >= 100)
+ORDER BY visit_date
+======================================================================================================================
+
+ Third Highest Sales
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Write a query to compare each sale of a customer with 3rd highest sale of that customer.
+
+Order the output by customerNumber in ascending order and by sales in descending order.
+Sample Input:
+=================================================================================================
+select o.customerNumber,od.orderNumber,od.productCode,
+       od.quantityOrdered*od.priceEach as sales,
+       NTH_VALUE(od.quantityOrdered*od.priceEach, 3) 
+                OVER (PARTITION BY o.customerNumber 
+                ORDER BY od.quantityOrdered*od.priceEach DESC 
+                RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING ) AS thirdHighestSales
+       from orderdetails od
+       join orders o on od.orderNumber=o.orderNumber
+       order by o.customerNumber, sales desc
+==============================================================================================================
+First day job
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to find the first day of the first job of every employee and return it as 'first_day_job'.
+
+Return the columns 'first_name', and 'first_day_job'.
+Return the result ordered by first_name in ascending order.
+==================================================================================================================
+select distinct(e.first_name),
+       first_value(jh.start_date) OVER (PARTITION BY jh.employee_id ORDER BY jh.start_date) AS 'first_day_job'
+       from job_history jh
+       join employees e on jh.employee_id=e.employee_id
+       order by e.first_name
+
+===========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,106 @@
+#Divide all the employees into 4 different buckets (i.e. quartiles) based on their salaries.#
+
+select *,
+ntile(4)over(order by salary) as grp
+from `hr.employees`
+order by grp
+
+#top 20% customers by total revenue
+select *,
+       ntile(5) over(order by revenue desc) as grp
+from (select customer_id,
+       sum(cost_to_customer_per_qty*quantity) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+order by grp
+
+#For every employee, display their details along with the salary of the next highest earning employee. Also, create a new column sal_diff to calculate the difference in their salaries.#
+
+select *,
+       lead(salary,1) over(order by salary) as nxt_salary
+from `hr.employees`
+order by salary
+
+select *,
+       lead(revenue,1) over(order by revenue) as nxt_revenue
+       from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+order by revenue
+
+select *,
+       lead(revenue,1) over(order by revenue) as nxt_revenue,
+       lead(revenue,1) over(order by revenue)-revenue as diff
+
+       from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+order by revenue
+
+select *,
+       lead(revenue,5) over(order by revenue) as nxt_revenue,
+       lead(revenue,1) over(order by revenue)-revenue as diff
+
+       from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+order by revenue
+
+select *,
+       lag(revenue,1) over(order by revenue) as nxt_revenue,
+       lag(revenue,1) over(order by revenue)-revenue as diff
+
+       from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+order by revenue
+
+## Running total by customer
+select *,
+      sum(revenue) over(order by customer_id) as run_total
+      from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+  order by 1
+
+select *,
+      round(avg(revenue) over(order by revenue),1) as running_avg
+      from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+		
+		
+select *,
+sum(revenue) over (order by revenue rows between current row and unbounded following) as total
+from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+        order by 2
+
+
+select *,
+sum(revenue) over (order by revenue rows between 1 preceding and 1 following) as total
+from
+(select customer_id,
+       round(sum(cost_to_customer_per_qty*quantity),1) as revenue
+       from `farmers_market.customer_purchases`
+        group by 1)
+        order by 2
+		
+		
+		The inner query (subquery) starts with the SELECT statement and performs calculations on the ordersdetails table.
+

@@ -1,0 +1,244 @@
+Find the difference between the total number of CITY entries in the table and the number of distinct CITY entries in the table.
+=======select count(city)-count(distinct(city)) from station;
+
+===========
+
+
+Q1. Northern Latitudes
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to get the greatest value of the Northern Latitudes (lat_n) as max from the station table which is less than 138.2523.
+
+Round off the maximum value to 4 decimal places.
+=========================================================
+select round(max(lat_n),4) as max from station
+where lat_n < 138.2523
+
+============================================================
+3rd highest
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a SQL query to find all the details of those employees who earn the third-highest salary.
+
+Return all the columns from the employees table.
+Follow-Up: Avoid using LIMIT keyword in the query.
+
+========================================================
+select * from employees
+where salary in (select max(salary) 
+                      from employees 
+                      where salary < (select max(salary) 
+                      from employees where salary < (select max(salary) 
+                      from employees)));
+					 
+
+========================================================
+
+4 or More employees
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to display the "full_name" (first name and last name separated by space) of a manager who manages 4 or more employees.
+
+Note:
+
+Return the result ordered by full_name in ascending order.
+The column manager_id in the employees table represents the employee_id of the manager.
+=============================================================================================
+select concat(first_name,' ',last_name) as full_name
+from employees
+where employee_id in (select manager_id
+                     from employees 
+                     group by(manager_id)
+                     having (count(*)>= 4))
+order by full_name
+
+============================================================================================
+Q2. Top Earners
+SQL
+Attempted
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+We define an employee's total earnings to be their monthly (salary×months) worked, and the maximum total earnings to be the maximum total earnings for any employee in the employee table.
+
+Write a query to find the maximum total earnings (earnings) for all employees as well as the total number of employees (num_employees) who have maximum total earnings.
+=======================================================================================================
+select salary*months as earnings,
+      count(*) as num_employees
+from employee
+group by earnings
+order by earnings desc
+limit 1
+============================================================================================================
+Q4. Biggest Number
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+A single number is a number that appeared only once in the mynumbers table.
+
+Write a query to report the largest single number. If there is no single number, report null.
+=====================================================================================================================
+SELECT MAX(num) AS num
+from mynumbers
+where num in(SELECT num FROM mynumbers GROUP BY num HAVING COUNT(num) = 1)
+
+
+======================================================================================================================
+
+Q5. Actors and Directors
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query for a report that provides the pairs (actor_id, director_id) where the actor has cooperated with the director at least three times.
+
+Return the result table ordered by actor_id in ascending manner.
+===============================================================================================
+Q5. Actors and Directors
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query for a report that provides the pairs (actor_id, director_id) where the actor has cooperated with the director at least three times.
+
+Return the result table ordered by actor_id in ascending manner.
+==============================================================================================
+select actor_id,director_id
+from actordirector
+group by actor_id,director_id
+having count(*)>=3
+order by actor_id
+====================================================================================================
+
+Q8. Atleast 9000
+SQL
+Unsolved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Display the details of those departments where the salary of each employee in that department is at least 9000.
+
+Return all the columns from the departments table.
+Return the result ordered by department_id in ascending order.
+
+===============================================================================================================
+select * 
+from departments
+where department_id in(
+select department_id
+from employees
+group by department_id
+having min(salary)>=9000)
+=========================================================
+
+Q3. Department level
+SQL
+Solved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+Write a query to tag the department as per the count of employees working in that department.
+
+If the number of employees is 1 then the "Junior Department"
+If the number of employees is ≤ 4 then "Intermediate Department".
+If the number of employees is > 4 then it is "Senior Department" and save the column as "Department_level."
+Save the department_id as 'Department' and count of employees as 'No_of_employees'.
+Order the output by the 'No_of_employees' and 'Department' in ascending order.
+Return the columns 'Department', 'No_of_employees', and 'Department_level'.
+Use the employees table.
+================================================================================
+SELECT department_id AS "Department", 
+       count(*) AS "No_of_employees",
+       case when count(*) = 1
+       then "Junior Department"
+       when count(*) <= 4
+       then "Intermediate Department"
+       when count(*) > 4
+       then "Senior Department"
+       end as "Department_level"
+       from employees
+       group by department_id
+       order by No_of_employees, Department
+=====================================================================================================================
+
+Q2. Percentage & Queries Quality
+SQL
+Solved
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Statement:
+
+We define query quality as:
+
+The average of the ratio between query rating and its position.
+We also define poor query percentage as:
+
+The percentage of all queries with a rating is less than 3.
+Write a query to find each query_name, the quality and poor_query_percentage.
+
+Both quality and poor_query_percentage should be rounded to 2 decimal places.
+
+Return the result table ordered by query_name in ascending order.
+==============================================================================================================
+
+SELECT query_name,
+       round(sum(rating/position)/count(query_name),2) as quality,
+       round(sum(case when rating < 3 then 1 else 0 end)*100/count(query_name),2) as poor_query_percentage
+       from queries group by query_name
+       ORDER BY query_name
+================================================================================================================
+Q1. Candidates Skills
+SQL
+Attempted
+feature icon
+Using hints except Complete Solution is Penalty free now
+Use Hint
+Problem Description:
+
+Given a list of candidates and their skills, you're asked to find the candidates best suited for an open Data Science job. We want to find candidates who are proficient in 'Python', 'Tableau', and 'MySQL'.
+
+Write a query to list the candidates who possess all three required skills for the job.
+
+Note: There are no duplicates in the candidates table.
+
+Return the result ordered by candidate_id in ascending order.
+=========================================================================================================================
+select candidate_id 
+from candidates
+where skill in ('Python','Tableau','MySQL')
+group by candidate_id
+having count(distinct skill) = 3
+order by candidate_id
+================================================================================================================
